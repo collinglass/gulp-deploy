@@ -14,11 +14,6 @@ Step 2: Concatenates my javascript files.
 
 Step 3: Minifies my javascript files.
 
-Step 4: Starts watching for changes. (Not really a step)
+Step 4: Deploys my static files to rackspace.
 
-Step 5: Deploys my static files to rackspace.
-
-
-### Issues
-
-Keep file structure.
+Step 5: Starts watching for changes.

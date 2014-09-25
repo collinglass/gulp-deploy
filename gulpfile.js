@@ -26,9 +26,24 @@ gulp.task('scripts', function() {
         }))
         .pipe(concat('all.js'))
         .pipe(gulp.dest('dist'))
-        .pipe(rename('all.min.js'))
+        .pipe(rename('/js/all.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
+});
+
+// Upload to rackspace
+gulp.task('deploy', function() {
+    gulp.src(['./dist/all.min.js'], {read: false})
+    .pipe(cloudfiles(rackspace, { uploadPath: "/js/" }));
+
+    gulp.src(['css/*.css'], {read: false})
+    .pipe(cloudfiles(rackspace, { uploadPath: "/css/" }));
+    gulp.src(['tmpl/*.html'], {read: false})
+    .pipe(cloudfiles(rackspace, { uploadPath: "/tmpl/" }));
+    gulp.src(['img/*.png'], {read: false})
+    .pipe(cloudfiles(rackspace, { uploadPath: "/img/" }));
+    gulp.src(['index.html'], {read: false})
+    .pipe(cloudfiles(rackspace, {}));
 });
 
 // Watch Files For Changes
@@ -36,19 +51,5 @@ gulp.task('watch', function() {
     gulp.watch(["js/*.js", "js/*/*.js"], ['lint', 'scripts']);
 });
 
-// 
-var options = { 
-    delay: 1000, // optional delay each request by x milliseconds, default is 0
-    headers: {}, // optional additional headers
-    uploadPath: "" //optional upload path (uses the container root by default)
-} 
-
-// Upload to rackspace
-gulp.task('deploy', function() {
-    gulp.src(['./dist/**', './css/*.css', './tmpl/*.html', './index.html', './img/*.png'], {read: false})
-    .pipe(cloudfiles(rackspace, options));
-});
-
-
 // Default Task
-gulp.task('default', ['lint', 'scripts', 'watch', 'deploy']);
+gulp.task('default', ['lint', 'scripts', 'deploy', 'watch']);
